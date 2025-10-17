@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماشین حساب قیمت MDF پیشرفته</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8fafc;
+        }
+        .number-input {
+            /* Ensures numbers are displayed correctly in RTL context */
+            direction: ltr; 
+            text-align: right;
+        }
+        .result-box {
+            background-color: #fef3c7; /* Amber-100 */
+            border-color: #fcd34d; /* Amber-400 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
+
+    <div class="w-full max-w-5xl bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8 border-b-4 border-blue-600 pb-3">ماشین حساب قیمت MDF</h1>
+        
+        <!-- STEP 1 & 2: Base MDF Sheet Input and Price per sqm Calculation -->
+        <div class="mb-10 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold text-blue-700 mb-4 flex items-center">
+                <span class="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-full ml-3">۱</span>
+                اطلاعات ورق خام موجودی (ابعاد به سانتی‌متر)
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                    <label for="sheet-length" class="block text-sm font-medium text-gray-700 mb-1">طول ورق (cm)</label>
+                    <input type="text" id="sheet-length" value="366" class="number-input w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
+                </div>
+                <div>
+                    <label for="sheet-width" class="block text-sm font-medium text-gray-700 mb-1">عرض ورق (cm)</label>
+                    <input type="text" id="sheet-width" value="183" class="number-input w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
+                </div>
+                <div class="col-span-2 md:col-span-2">
+                    <label for="sheet-price" class="block text-sm font-medium text-gray-700 mb-1">قیمت کل ورق (ریال)</label>
+                    <input type="text" id="sheet-price" value="6,700,000" placeholder="قیمت کامل ورق" class="number-input w-full p-2 border border-gray-300 rounded-lg text-lg font-bold focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
+                </div>
+            </div>
+            
+            <!-- Calculated Price per sqm Display -->
+            <div class="mt-5 p-3 result-box border rounded-lg flex justify-between items-center">
+                <span class="font-bold text-gray-800">قیمت هر متر مربع ورق (ریال)</span>
+                <span id="price-per-sqm-display" class="text-xl font-extrabold text-amber-700 number-input">0</span>
+            </div>
+        </div>
+        
+        <!-- STEP 3-6: Individual Part Input and Calculation -->
+        <h2 class="text-xl font-bold text-gray-700 mb-4 flex items-center border-b pb-2">
+            <span class="w-8 h-8 flex items-center justify-center bg-gray-600 text-white rounded-full ml-3">۲</span>
+            ورود ابعاد قطعات کوچک (ابعاد به سانتی‌متر)
+        </h2>
+
+        <!-- Header for Parts List -->
+        <div class="hidden md:grid grid-cols-12 gap-4 text-xs font-bold text-gray-600 mb-3 pb-2 border-b">
+            <span class="col-span-3">نام قطعه / توضیحات</span>
+            <span class="col-span-2 text-center">طول (cm)</span>
+            <span class="col-span-2 text-center">عرض (cm)</span>
+            <span class="col-span-1 text-center">تعداد</span>
+            <span class="col-span-3 text-right">قیمت کل این قطعات (ریال)</span>
+            <span class="col-span-1"></span>
+        </div>
+
+        <!-- Container for MDF piece inputs -->
+        <div id="pieces-container" class="space-y-3">
+            <!-- Piece rows will be injected here -->
+        </div>
+
+        <!-- Add Piece Button -->
+        <button id="add-piece-btn" class="w-full mt-6 py-3 px-6 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 shadow-lg flex items-center justify-center">
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            افزودن قطعه جدید
+        </button>
+        
+        <!-- STEP 6: Final Results Display -->
+        <div class="mt-10 pt-6 border-t-4 border-blue-600 bg-gray-50 rounded-xl p-6 shadow-xl">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">خلاصه نهایی محاسبات</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Total Area -->
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg border border-gray-200">
+                    <span class="font-semibold text-gray-700">مساحت کل مصرفی (مترمربع)</span>
+                    <span id="total-area" class="text-xl font-extrabold text-blue-700 number-input">0</span>
+                </div>
+
+                <!-- Total Pieces -->
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg border border-gray-200">
+                    <span class="font-semibold text-gray-700">تعداد کل قطعات</span>
+                    <span id="total-pieces" class="text-xl font-extrabold text-blue-700 number-input">0</span>
+                </div>
+            </div>
+
+            <!-- Grand Total Price -->
+            <div class="mt-5 p-4 bg-blue-100 rounded-lg border-2 border-blue-300 flex justify-between items-center flex-wrap">
+                <span class="text-2xl md:text-3xl font-extrabold text-gray-900">جمع کل هزینه قطعات (ریال)</span>
+                <span id="grand-total-price" class="text-4xl md:text-5xl font-extrabold text-blue-700 mt-2 md:mt-0 number-input">0</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500 pt-4 border-t border-gray-200">
+            سازنده: **گروه طراحان جوان**
+        </div>
+
+    </div>
+
+    <script>
+        // Global variables and references
+        let pieceCounter = 0;
+        const piecesContainer = document.getElementById('pieces-container');
+        
+        // Sheet Inputs
+        const sheetLengthInput = document.getElementById('sheet-length');
+        const sheetWidthInput = document.getElementById('sheet-width');
+        const sheetPriceInput = document.getElementById('sheet-price');
+
+        // Main Result Displays
+        const pricePerSqmDisplay = document.getElementById('price-per-sqm-display');
+        const totalAreaDisplay = document.getElementById('total-area');
+        const totalPiecesDisplay = document.getElementById('total-pieces');
+        const grandTotalPriceDisplay = document.getElementById('grand-total-price');
+
+        // --- Helper Functions ---
+
+        /**
+         * Converts a string with commas to a clean number.
+         * @param {string} value 
+         * @returns {number}
+         */
+        const parseNumber = (value) => {
+            return parseFloat(value.toString().replace(/,/g, '')) || 0;
+        };
+
+        /**
+         * Formats a number with thousand separators (comma).
+         * @param {number} num 
+         * @returns {string}
+         */
+        const formatNumber = (num) => {
+            if (typeof num !== 'number') return "0";
+            return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
+        /**
+         * Handles numeric input formatting and triggers the main calculation.
+         * @param {Event} e 
+         */
+        const handleNumericInput = (e) => {
+            let value = e.target.value;
+            const selectionStart = e.target.selectionStart;
+
+            // 1. Remove non-numeric/non-comma characters and existing commas
+            let cleanValue = value.replace(/[^\d]/g, '');
+            
+            // 2. Re-format with commas
+            let formattedValue = formatNumber(parseNumber(cleanValue));
+            
+            e.target.value = formattedValue;
+            
+            // Adjust cursor position after formatting (basic approach)
+            const diff = formattedValue.length - value.length;
+            e.target.setSelectionRange(selectionStart + diff, selectionStart + diff);
+            
+            calculateAll();
+        };
+
+        // --- Core Calculation Logic ---
+
+        /**
+         * STEP 2: Calculates the price per square meter of the raw sheet.
+         * @returns {number} The price per square meter (Rials/m²).
+         */
+        const calculatePricePerSqm = () => {
+            const lengthCm = parseNumber(sheetLengthInput.value);
+            const widthCm = parseNumber(sheetWidthInput.value);
+            const sheetPrice = parseNumber(sheetPriceInput.value);
+
+            // Calculate sheet area in m²
+            // Area (m²) = (Length (cm) * Width (cm)) / 10000
+            const sheetAreaM2 = (lengthCm * widthCm) / 10000;
+
+            if (sheetAreaM2 <= 0 || sheetPrice <= 0) {
+                pricePerSqmDisplay.textContent = formatNumber(0);
+                return 0;
+            }
+
+            const pricePerSqm = sheetPrice / sheetAreaM2;
+            pricePerSqmDisplay.textContent = formatNumber(pricePerSqm);
+            return pricePerSqm;
+        };
+
+        /**
+         * Main function to calculate all totals.
+         */
+        const calculateAll = () => {
+            const pricePerSqm = calculatePricePerSqm(); // Calculate base price first
+            
+            let grandTotal = 0;
+            let totalAreaM2 = 0;
+            let totalQuantity = 0;
+            const pieceRows = piecesContainer.querySelectorAll('.piece-row');
+
+            // 1. Iterate over all piece rows
+            pieceRows.forEach(row => {
+                const lengthInput = row.querySelector('.length-input');
+                const widthInput = row.querySelector('.width-input');
+                const quantityInput = row.querySelector('.quantity-input');
+                const subtotalDisplay = row.querySelector('.subtotal-display');
+
+                const lengthCm = parseNumber(lengthInput.value);
+                const widthCm = parseNumber(widthInput.value);
+                const quantity = parseNumber(quantityInput.value);
+
+                // Accumulate quantity (even if dimensions are zero, we count the piece)
+                totalQuantity += quantity;
+
+                // Stop calculation if dimensions are missing or base price is zero
+                if (lengthCm <= 0 || widthCm <= 0 || pricePerSqm <= 0) {
+                    subtotalDisplay.textContent = formatNumber(0);
+                    return; 
+                }
+
+                // 2. Calculate Total Area for this piece group in m²
+                // Area (m²) = (Length (cm) * Width (cm) * Quantity) / 10000 
+                const areaM2 = (lengthCm * widthCm * quantity) / 10000;
+
+                // 3. Calculate Subtotal Price (STEP 4 & 6)
+                const subtotalPrice = areaM2 * pricePerSqm;
+                
+                // 4. Accumulate totals
+                totalAreaM2 += areaM2;
+                grandTotal += subtotalPrice;
+
+                // 5. Update UI for subtotal (STEP 6)
+                subtotalDisplay.textContent = formatNumber(subtotalPrice);
+            });
+
+            // 6. Update Final Grand Totals (STEP 6)
+            grandTotalPriceDisplay.textContent = formatNumber(grandTotal);
+            // Display total area with max 3 decimal places
+            totalAreaDisplay.textContent = totalAreaM2.toFixed(3).replace(/\.?0+$/, ''); 
+            totalPiecesDisplay.textContent = formatNumber(totalQuantity);
+        };
+
+        // --- Dynamic Row Management (STEP 5) ---
+
+        const addPieceRow = () => {
+            pieceCounter++;
+
+            // Create row element
+            const row = document.createElement('div');
+            row.classList.add('piece-row', 'grid', 'grid-cols-12', 'gap-4', 'bg-white', 'p-3', 'rounded-lg', 'border', 'border-gray-200', 'items-center', 'shadow-sm', 'text-sm');
+            row.dataset.id = pieceCounter;
+
+            // Inner HTML for the row
+            row.innerHTML = `
+                <!-- Description/Name -->
+                <div class="col-span-12 md:col-span-3">
+                    <input type="text" placeholder="نام قطعه #${pieceCounter}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500 text-sm">
+                </div>
+
+                <!-- Length (cm) -->
+                <div class="col-span-4 md:col-span-2">
+                    <input type="text" value="30" class="length-input number-input w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500 text-center" inputmode="numeric" placeholder="طول">
+                </div>
+
+                <!-- Width (cm) -->
+                <div class="col-span-4 md:col-span-2">
+                    <input type="text" value="30" class="width-input number-input w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500 text-center" inputmode="numeric" placeholder="عرض">
+                </div>
+
+                <!-- Quantity -->
+                <div class="col-span-4 md:col-span-1">
+                    <input type="text" value="1" class="quantity-input number-input w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500 text-center" inputmode="numeric" placeholder="تعداد">
+                </div>
+
+                <!-- Subtotal Price -->
+                <div class="col-span-9 md:col-span-3">
+                    <div class="subtotal-display font-bold text-base text-green-700 p-2 bg-green-50 border border-green-200 rounded-md text-right flex items-center justify-end number-input">0</div>
+                </div>
+
+                <!-- Remove Button -->
+                <div class="col-span-3 md:col-span-1 flex items-center justify-end md:justify-center">
+                    <button class="remove-piece-btn text-red-500 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-red-100" title="حذف این قطعه">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+
+            piecesContainer.appendChild(row);
+
+            // Attach event listeners for calculation and formatting to all numeric inputs
+            const numericInputs = row.querySelectorAll('.number-input');
+            numericInputs.forEach(input => {
+                input.addEventListener('input', handleNumericInput);
+                // Trigger formatting for default values
+                input.dispatchEvent(new Event('input'));
+            });
+            
+            // Attach remove functionality
+            row.querySelector('.remove-piece-btn').addEventListener('click', () => {
+                row.remove();
+                calculateAll(); // Recalculate after removal
+            });
+
+            // Recalculate totals immediately
+            calculateAll();
+        };
+
+        // --- Event Listeners and Initial Load ---
+
+        // Listen for changes in Sheet Inputs (Step 1)
+        [sheetLengthInput, sheetWidthInput, sheetPriceInput].forEach(input => {
+            input.addEventListener('input', handleNumericInput);
+        });
+
+        // Listen for Add Piece button click (Step 5)
+        document.getElementById('add-piece-btn').addEventListener('click', addPieceRow);
+        
+        // Initial setup: Add initial rows when the page loads
+        window.onload = () => {
+            // Apply initial formatting and run base calculation
+            [sheetLengthInput, sheetWidthInput, sheetPriceInput].forEach(input => {
+                input.dispatchEvent(new Event('input')); 
+            });
+            
+            // Add initial rows for immediate use
+            addPieceRow();
+            addPieceRow();
+            
+            // Final calculation
+            calculateAll();
+        };
+    </script>
+</body>
+</html>

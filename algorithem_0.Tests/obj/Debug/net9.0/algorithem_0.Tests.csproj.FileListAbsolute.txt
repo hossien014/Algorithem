@@ -103,3 +103,4 @@ C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0.Tests\obj\Debug\net9.0\refi
 C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0.Tests\obj\Debug\net9.0\algorithem_0.Tests.pdb
 C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0.Tests\obj\Debug\net9.0\algorithem_0.Tests.genruntimeconfig.cache
 C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0.Tests\obj\Debug\net9.0\ref\algorithem_0.Tests.dll
+C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0.Tests\obj\Debug\net9.0\algorithem_0.Tests.sourcelink.json

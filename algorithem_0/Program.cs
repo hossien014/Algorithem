@@ -7,12 +7,14 @@ var a = Enumerable.Range(1, 11).ToArray();
 
 var numbers = new int[] { -1, -2, -3, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 var t = 5;
+var arrtest = TowCrystalBalls.GetBigTestArr();
+var f = TowCrystalBalls.FindBrakingPoint(arrtest);
+System.Console.WriteLine();
+// var r = Bs(numbers, t); 
 
-// var r = Bs(numbers, t);
+// var r1 = BinarySearch.BinarySerach_N(numbers, t);
 
-var r1 = BinarySearch.BinarySerach_N(numbers, t);
-
-System.Console.WriteLine(r1);
+// System.Console.WriteLine(r1);
 
 // int Bs(int[] arr, int target)
 // {

@@ -123,3 +123,4 @@ C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0\obj\Debug\net9.0\refint\alg
 C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0\obj\Debug\net9.0\algorithem_0.pdb
 C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0\obj\Debug\net9.0\algorithem_0.genruntimeconfig.cache
 C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0\obj\Debug\net9.0\ref\algorithem_0.dll
+C:\Users\hossi\Desktop\codes\Algorithem\algorithem_0\obj\Debug\net9.0\algorithem_0.sourcelink.json
